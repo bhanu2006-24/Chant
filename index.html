@@ -3,1063 +3,329 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vaishnava Vibes | Ultimate Chanting Portal</title>
-    
-    <!-- Tailwind CSS -->
+    <title>Vaishnava Vibes | Eternal Chanting</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- GSAP & Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
-    <!-- Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-    <!-- Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --saffron: #FF9933;
-            --gold: #FFD700;
-            --accent-glow: rgba(255, 215, 0, 0.6);
-            --deep-blue: #0f172a;
-            --glass-border: rgba(255, 215, 0, 0.3);
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
-        }
-
-        /* Themes */
-        [data-theme="forest"] {
-            --saffron: #22c55e;
-            --gold: #86efac;
-            --deep-blue: #052e16;
-            --glass-border: rgba(34, 197, 94, 0.3);
-            --accent-glow: rgba(34, 197, 94, 0.6);
-        }
-
-        [data-theme="ocean"] {
-            --saffron: #38bdf8;
-            --gold: #7dd3fc;
-            --deep-blue: #0c4a6e;
-            --glass-border: rgba(56, 189, 248, 0.3);
-            --accent-glow: rgba(56, 189, 248, 0.6);
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            overflow-x: hidden;
-            background-color: var(--deep-blue);
-            color: var(--text-main);
-            margin: 0;
-            user-select: none;
-            transition: background-color 0.5s ease;
-        }
-
-        h1, h2, .spiritual-font {
-            font-family: 'Cinzel', serif;
-        }
-
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-        }
-
-        .mantra-text {
-            text-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        .gold-glow {
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
-        }
-
-        /* Deity Frames */
-        .frame-ornament {
-            border: 3px solid #FFD700;
-            position: relative;
-            background: #000;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .frame-ornament::before {
-            content: '';
-            position: absolute;
-            top: -6px; left: -6px; right: -6px; bottom: -6px;
-            border: 1px solid rgba(255, 153, 51, 0.6);
-            pointer-events: none;
-        }
-
-        .darshan-active .frame-ornament {
-            border-color: #fff;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-        }
-
-        /* Bead Click Animation Ripple */
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 215, 0, 0.6);
-            transform: scale(0);
-            animation: ripple-anim 0.6s linear;
-            pointer-events: none;
-        }
-
-        @keyframes ripple-anim {
-            to {
-                transform: scale(4);
-                opacity: 0;
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        'saffron': '#FF9933',
+                        'deep-blue': '#1a237e',
+                        'gold': '#FFD700',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
             }
         }
-        
-        /* Celebration Flash */
-        #flash-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(255,215,0,0.6) 0%, rgba(255,153,51,0) 80%);
-            pointer-events: none;
-            opacity: 0;
-            z-index: 50;
-            mix-blend-mode: screen;
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        /* Progress Bar */
-        .progress-bar-container {
-            background: rgba(255,255,255,0.1);
-            border-radius: 999px;
-            overflow: hidden;
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
-        .progress-fill {
-            background: linear-gradient(90deg, var(--saffron), var(--gold));
-            transition: width 0.5s ease-out;
+        .bead-glow {
+            box-shadow: 0 0 30px rgba(255, 153, 51, 0.4);
         }
-        
-        /* Settings Panel */
-        .settings-panel {
-            background: var(--deep-blue);
-            border-left: 1px solid var(--glass-border);
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 4px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
-
-    <!-- Audio Assets -->
-    <audio id="haribol-audio" src="assets/hairbol.ogg"></audio>
-    <audio id="bg-mantra" src="assets/mahamantra.ogg" loop></audio>
-
-    <!-- 3D Background -->
-    <div id="canvas-container" class="absolute inset-0 z-0"></div>
+<body class="bg-gray-900 text-white overflow-x-hidden min-h-screen relative">
     
-    <!-- Flash Overlay -->
-    <div id="flash-overlay"></div>
-
-    <!-- Navigation -->
-    <nav class="w-full p-4 flex justify-between items-center z-20 glass-panel border-b-0 sticky top-0">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-500 to-orange-600 flex items-center justify-center text-white font-bold text-lg gold-glow shadow-inner relative z-10">
-                V
-            </div>
-            <span class="text-xl md:text-2xl font-bold spiritual-font text-yellow-400 tracking-wide drop-shadow-md hidden md:block">Vaishnava Vibes</span>
-        </div>
-        <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2">
-             <button id="darshan-toggle" class="p-2 rounded-full bg-slate-800/50 hover:bg-white/10 text-yellow-300 transition-all border border-white/10" title="Darshan Mode">
-                <i data-lucide="eye" class="w-5 h-5"></i>
-            </button>
-            <button id="drone-toggle" class="p-2 rounded-full bg-slate-800/50 hover:bg-white/10 text-yellow-300 transition-all border border-white/10" title="Drone Sound">
-                <i data-lucide="music" class="w-5 h-5"></i>
-            </button>
-            <button id="info-toggle" class="p-2 rounded-full bg-slate-800/50 hover:bg-white/10 text-yellow-300 transition-all border border-white/10" title="Meaning">
-                <i data-lucide="info" class="w-5 h-5"></i>
-            </button>
-             <button id="settings-toggle" class="p-2 rounded-full bg-slate-800/50 hover:bg-white/10 text-yellow-300 transition-all border border-white/10" title="Settings">
-                <i data-lucide="settings" class="w-5 h-5"></i>
-            </button>
-        </div>
-        </div>
-    </nav>
+    <!-- Background Slideshow/Image -->
+    <div class="fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out" id="bg-container">
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent z-10"></div>
+        <img src="assets/RadhaVallabh.jpeg" id="bg-image" class="w-full h-full object-cover object-center scale-110 motion-safe:animate-pulse-slow opacity-60" alt="Divine Background">
+    </div>
 
     <!-- Main Content -->
-    <main class="flex-grow flex flex-col md:flex-row items-center justify-center relative z-10 w-full h-[calc(100vh-80px)] md:h-auto overflow-hidden">
+    <div class="relative z-20 container mx-auto px-4 py-8 min-h-screen flex flex-col justify-between">
         
-        <!-- MOBILE VISUALS (70% Height) -->
-        <div class="md:hidden h-[60%] w-full relative overflow-hidden bg-black/20" id="mobile-visuals">
-             <!-- Carousel Container -->
-             <div id="carousel-track" class="absolute inset-0 flex transition-transform duration-1000 ease-in-out h-full">
-                <!-- Images will be injected here via JS -->
-             </div>
-             
-             <!-- Overlay Gradient -->
-             <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent z-10 pointer-events-none"></div>
-
-             <!-- Floating Particles Container (Mobile) -->
-             <div id="mobile-particles" class="absolute inset-0 pointer-events-none z-0"></div>
-        </div>
-
-        <!-- DESKTOP VISUALS (Side Deities) -->
-        <div id="deity-container" class="hidden md:flex absolute inset-0 pointer-events-none justify-between items-center px-4 xl:px-16 transition-all duration-700 opacity-30 xl:opacity-100">
-            <!-- Left Deity -->
-            <div class="deity-frame transform transition-all duration-700 -translate-x-full xl:translate-x-0" id="deity-left">
-                <div class="frame-ornament rounded-lg overflow-hidden shadow-2xl w-48 xl:w-64">
-                    <img src="assets/guru.png" class="w-full h-auto object-cover opacity-90 transition-opacity duration-700 hover:opacity-100">
-                    <div class="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent text-center py-2 text-yellow-100 text-xs font-serif tracking-widest">SRILA PRABHUPADA</div>
-                </div>
-            </div>
-            <!-- Right Deity -->
-             <div class="deity-frame transform transition-all duration-700 translate-x-full xl:translate-x-0" id="deity-right">
-                <div class="frame-ornament rounded-lg overflow-hidden shadow-2xl w-48 xl:w-64">
-                    <img src="assets/radha_krishna.png" class="w-full h-auto object-cover opacity-90 transition-opacity duration-700 hover:opacity-100">
-                    <div class="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent text-center py-2 text-yellow-100 text-xs font-serif tracking-widest">SRI SRI RADHA KRISHNA</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- CONTROLS AREA (Mobile: Bottom 30-40%, Desktop: Center) -->
-        <div class="h-[40%] md:h-auto w-full md:w-auto flex flex-col justify-center items-center relative z-20 px-4">
-            
-            <div class="glass-panel p-4 md:p-8 rounded-t-3xl md:rounded-3xl shadow-2xl w-full max-w-md text-center border-t border-yellow-500/40 relative overflow-hidden backdrop-blur-xl h-full md:h-auto flex flex-col justify-between">
-                
-                <!-- Daily Goal Progress (Compact on Mobile) -->
-                <div class="mb-2 md:mb-6">
-                    <div class="flex justify-between text-[10px] md:text-xs text-yellow-200/70 mb-1 uppercase tracking-wider font-semibold">
-                        <span>Goal</span>
-                        <span id="goal-text">0 / 16 R</span>
-                    </div>
-                    <div class="progress-bar-container h-1 md:h-2 w-full">
-                        <div id="daily-progress" class="progress-fill h-full w-0"></div>
-                    </div>
-                </div>
-
-                <!-- Stats (Header) -->
-                <div class="flex justify-between items-end border-b border-white/10 pb-2 md:pb-4 mb-2 md:mb-4">
-                    <div class="text-left">
-                        <span class="block text-[8px] md:text-[10px] text-blue-300 uppercase tracking-widest">Time</span>
-                        <span id="timer-display" class="font-mono text-sm md:text-xl text-blue-100">00:00</span>
-                    </div>
-                    <div class="text-center md:hidden">
-                        <h2 class="text-base text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 font-bold spiritual-font">Mantra</h2>
-                    </div>
-                    <div class="text-right">
-                        <span class="block text-[8px] md:text-[10px] text-orange-300 uppercase tracking-widest">Rounds</span>
-                        <span id="round-display" class="font-mono text-xl md:text-3xl font-bold text-yellow-400">0</span>
-                    </div>
-                </div>
-
-                <h2 class="hidden md:block text-3xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 font-bold spiritual-font mb-1 drop-shadow-sm">Maha Mantra</h2>
-                
-                <!-- Main Circular Interaction -->
-                <div class="relative py-2 md:py-6 group flex-grow flex items-center justify-center">
-                    <!-- Outer decorative ring -->
-                    <div class="absolute inset-0 border-2 border-dashed border-white/10 rounded-full animate-[spin_20s_linear_infinite] w-48 h-48 md:w-64 md:h-64 mx-auto pointer-events-none"></div>
-
-                    <!-- Circular Progress SVG -->
-                    <div class="relative w-48 h-48 md:w-64 md:h-64">
-                         <svg class="w-full h-full transform -rotate-90 relative z-10" viewBox="0 0 256 256">
-                            <!-- Track -->
-                            <circle cx="128" cy="128" r="118" stroke="#334155" stroke-width="4" fill="transparent" />
-                            <!-- Progress -->
-                            <circle id="progress-ring" cx="128" cy="128" r="118" stroke="url(#grad1)" stroke-width="8" fill="transparent" class="transition-all duration-200" stroke-dasharray="741" stroke-dashoffset="741" stroke-linecap="round" />
-                        </svg>
-                        
-                        <!-- Count Button -->
-                        <button id="chant-btn" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-36 h-36 md:w-48 md:h-48 rounded-full bg-gradient-to-b from-slate-800 to-slate-900 shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-yellow-500/20 cursor-pointer hover:border-yellow-500/50 active:scale-95 transition-all duration-100 z-20 overflow-hidden outline-none tap-highlight-transparent">
-                            <div class="absolute inset-0 bg-[url('assets/bead_texture.png')] bg-cover bg-center opacity-30 mix-blend-overlay"></div>
-                            <span class="text-[8px] md:text-[10px] text-gray-400 mb-0 md:mb-1 uppercase tracking-widest">Bead</span>
-                            <span id="count-display" class="text-5xl md:text-7xl font-bold text-white spiritual-font leading-none drop-shadow-lg">0</span>
-                            <span class="text-[10px] md:text-xs text-gray-500 mt-1 md:mt-2 font-mono">/ 108</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Mantra Text (Desktop Only) -->
-                <div class="hidden md:block mt-2 mb-6">
-                    <div class="p-4 bg-gradient-to-r from-black/20 via-black/40 to-black/20 rounded-xl border border-white/5">
-                        <p class="text-yellow-100 font-medium leading-relaxed tracking-wide text-center text-sm md:text-base mantra-text">
-                            Hare Krishna Hare Krishna<br>
-                            Krishna Krishna Hare Hare<br>
-                            Hare Rama Hare Rama<br>
-                            Rama Rama Hare Hare
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Controls -->
-                <div class="flex justify-center items-center gap-4 mt-2">
-                    <button id="reset-btn" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors" title="Reset Round">
-                        <i data-lucide="rotate-ccw" class="w-4 h-4 md:w-5 md:h-5"></i>
-                    </button>
-                    <div class="h-6 w-px bg-white/10"></div>
-                    <div class="text-xs text-slate-400">
-                        Total: <span id="total-display" class="text-slate-200 font-mono">0</span>
-                    </div>
-                </div>
-
-                <div class="hidden md:block mt-4 text-[10px] text-slate-500 font-mono">
-                    Avg: <span id="avg-time">0.0s</span>/bead
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Settings Panel -->
-    <div id="settings-panel" class="fixed inset-y-0 right-0 w-80 settings-panel transform translate-x-full transition-transform duration-300 z-50 shadow-2xl p-6 overflow-y-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h3 class="text-xl font-bold text-yellow-400 spiritual-font">Settings</h3>
-            <button id="close-settings" class="text-slate-400 hover:text-white">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
-        </div>
-
-        <!-- Customization -->
-        <div class="space-y-6">
-            <div>
-                <label class="block text-sm text-slate-400 mb-3 uppercase tracking-wider">Visual Theme</label>
-                <div class="grid grid-cols-3 gap-2">
-                    <button class="theme-btn p-2 rounded-lg border border-yellow-500/20 bg-slate-800 hover:bg-slate-700 transition flex flex-col items-center gap-1 active-theme" data-val="divine">
-                        <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-yellow-500 to-orange-500"></div>
-                        <span class="text-[10px]">Divine</span>
-                    </button>
-                    <button class="theme-btn p-2 rounded-lg border border-white/5 bg-slate-800 hover:bg-slate-700 transition flex flex-col items-center gap-1" data-val="forest">
-                        <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-green-600 to-green-400"></div>
-                        <span class="text-[10px]">Forest</span>
-                    </button>
-                    <button class="theme-btn p-2 rounded-lg border border-white/5 bg-slate-800 hover:bg-slate-700 transition flex flex-col items-center gap-1" data-val="ocean">
-                        <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-400"></div>
-                        <span class="text-[10px]">Ocean</span>
-                    </button>
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-sm text-slate-400 mb-3 uppercase tracking-wider">Experience</label>
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-sm text-slate-300">Sound Effects</span>
-                    <button id="settings-sound-toggle" class="w-10 h-6 rounded-full bg-green-500/20 relative transition-colors">
-                        <div class="w-4 h-4 rounded-full bg-green-500 absolute left-1 top-1 transition-transform translate-x-4"></div>
-                    </button>
-                </div>
-                 <div class="flex justify-between items-center mb-4">
-                    <span class="text-sm text-slate-300">Haptic Vibration</span>
-                    <button id="haptic-toggle" class="w-10 h-6 rounded-full bg-green-500/20 relative transition-colors">
-                        <div class="w-4 h-4 rounded-full bg-green-500 absolute left-1 top-1 transition-transform translate-x-4"></div>
-                    </button>
-                </div>
-            </div>
-
-             <div>
-                <label class="block text-sm text-slate-400 mb-3 uppercase tracking-wider">Data</label>
-                 <button id="reset-total-btn" class="w-full py-2 px-4 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition text-sm">
-                    Reset Total Counts
-                </button>
+        <!-- Header -->
+        <header class="flex justify-between items-center animate-fade-in-down">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-om text-4xl text-saffron drop-shadow-lg"></i>
+                <h1 class="text-3xl font-serif italic font-bold bg-clip-text text-transparent bg-gradient-to-r from-saffron to-gold text-glow">
+                    Vaishnava Vibes
+                </h1>
             </div>
             
-             <div class="pt-4 border-t border-white/5">
-                <p class="text-xs text-slate-500 text-center">
-                    Keyboard Shortcuts:<br>
-                    Space / Enter : Chant<br>
-                    Esc : Close Modals
+            <button onclick="toggleAudio()" id="audio-btn" class="glass rounded-full p-4 transition-all hover:scale-110 hover:bg-white/20 group">
+                <i class="fas fa-music text-xl text-saffron group-hover:text-white transition-colors"></i>
+            </button>
+        </header>
+
+        <!-- Main Chanting Interface -->
+        <main class="flex flex-col items-center justify-center flex-grow py-12">
+            
+            <div class="relative group cursor-pointer mb-12" onclick="incrementCounter()">
+                <!-- Decorative Ring -->
+                <div class="absolute -inset-8 bg-gradient-to-r from-saffron to-purple-600 rounded-full opacity-20 group-hover:opacity-40 blur-xl transition-all duration-500 animate-spin-slow"></div>
+                
+                <!-- Main Bead -->
+                <div class="relative w-64 h-64 md:w-80 md:h-80 glass rounded-full flex flex-col items-center justify-center border-2 border-white/10 shadow-2xl bead-glow transition-transform active:scale-95 duration-200">
+                    <img src="assets/bead_texture.png" class="absolute inset-0 w-full h-full object-cover rounded-full opacity-30 mix-blend-overlay" alt="Texture">
+                    
+                    <span class="text-xs uppercase tracking-[0.3em] text-gray-400 mb-2">Chant & Tap</span>
+                    <h2 id="mantra-count" class="text-8xl font-serif font-bold text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">0</h2>
+                    <div class="mt-4 flex items-center gap-2 text-saffron/80">
+                        <i class="fas fa-ring"></i>
+                        <span id="round-count" class="text-sm font-medium">Round 1</span>
+                    </div>
+                </div>
+
+                <!-- Ripple Effect Container -->
+                <div id="ripple-container" class="absolute inset-0 pointer-events-none overflow-hidden rounded-full"></div>
+            </div>
+
+            <!-- Mantra Text -->
+            <div class="text-center space-y-4 max-w-2xl mx-auto glass p-8 rounded-2xl animate-float">
+                <p class="text-xl md:text-3xl font-serif leading-relaxed text-yellow-100">
+                    <span class="block">Hare Krishna Hare Krishna</span>
+                    <span class="block">Krishna Krishna Hare Hare</span>
+                    <span class="block text-saffron mt-2">Hare Rama Hare Rama</span>
+                    <span class="block text-saffron">Rama Rama Hare Hare</span>
                 </p>
             </div>
 
-        </div>
-    </div>
+        </main>
 
-    <!-- Info Modal -->
-    <div id="info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-slate-900 border border-yellow-500/30 p-8 rounded-2xl max-w-lg w-full mx-4 shadow-2xl relative transform scale-95 transition-transform duration-300" id="info-content">
-            <button id="close-info" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
-            <h2 class="text-2xl font-bold spiritual-font text-yellow-400 mb-4">The Maha Mantra</h2>
-            <div class="space-y-4 text-slate-300 leading-relaxed text-sm md:text-base">
-                <p>
-                    <span class="text-yellow-200 font-semibold">"Hare"</span> refers to the divine energy of the Lord.<br>
-                    <span class="text-yellow-200 font-semibold">"Krishna"</span> means the All-Attractive One.<br>
-                    <span class="text-yellow-200 font-semibold">"Rama"</span> means the Repository of All Pleasure.
-                </p>
-                <p>
-                    Chanting this mantra is a call to the Lord and His energy to engage one in His service. It is described in the Vedas as the most effective method for spiritual realization in the current age.
-                </p>
-                <div class="bg-yellow-500/10 p-4 rounded-lg border-l-4 border-yellow-500 italic text-yellow-100">
-                    "There is no other way, there is no other way, there is no other way..." - Brhan-naradiya Purana
+        <!-- Gallery / Footer -->
+        <footer class="mt-auto">
+            <div class="flex overflow-x-auto gap-4 pb-4 px-2 snap-x hide-scroll" id="image-gallery">
+                <!-- Javascript will populate this -->
+            </div>
+            
+            <div class="flex justify-between items-end mt-4 text-xs text-gray-500 font-sans border-t border-white/10 pt-4">
+                <p>Chant for Peace • <span id="total-chants-session">0</span> total today</p>
+                <div class="flex gap-4">
+                    <button onclick="resetCounter()" class="hover:text-red-400 transition-colors">Reset Round</button>
+                    <!-- <button class="hover:text-white transition-colors">Settings</button> -->
                 </div>
             </div>
-        </div>
+        </footer>
     </div>
 
-    <footer class="w-full py-4 text-center text-slate-500 text-xs relative z-10 pointer-events-none">
-        <p>Chant & Be Happy • <span class="text-yellow-600">Vaishnava Vibes</span></p>
-    </footer>
+    <!-- Audio Elements -->
+    <audio id="bg-music" loop>
+        <source src="assets/mahamantra.ogg" type="audio/ogg">
+    </audio>
+    <audio id="click-sound">
+        <source src="assets/hairbol.ogg" type="audio/ogg">
+    </audio>
 
     <script>
-        // --- LUCIDE ICONS ---
-        lucide.createIcons();
-
-
-        // --- AUDIO ENGINE (Procedural) ---
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let isMuted = false;
-        let isDronePlaying = false;
-        let droneOscillators = [];
-        let droneGain = null;
-
-        // Drone Functionality
-        function toggleDrone() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            if (isDronePlaying) {
-                // Stop Drone
-                const t = audioCtx.currentTime;
-                droneGain.gain.exponentialRampToValueAtTime(0.001, t + 1);
-                droneOscillators.forEach(osc => osc.stop(t + 1));
-                droneOscillators = [];
-                isDronePlaying = false;
-                return false;
-            } else {
-                // Start Drone (Tanpura-ish simulation)
-                droneGain = audioCtx.createGain();
-                droneGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-                droneGain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 2); // Fade in
-                
-                // Lowpass filter for warmth
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = "lowpass";
-                filter.frequency.value = 400;
-
-                droneGain.connect(filter);
-                filter.connect(audioCtx.destination);
-
-                // Root (C#3 approx)
-                const freq = 138.59; 
-                
-                const osc1 = audioCtx.createOscillator();
-                osc1.type = 'sawtooth';
-                osc1.frequency.value = freq;
-                
-                const osc2 = audioCtx.createOscillator();
-                osc2.type = 'sine';
-                osc2.frequency.value = freq * 1.5; // Fifth
-
-                const osc3 = audioCtx.createOscillator(); // Octave
-                osc3.type = 'sine';
-                osc3.frequency.value = freq * 2;
-
-                // Subtle detune for chorus effect
-                const osc4 = audioCtx.createOscillator();
-                osc4.type = 'sawtooth';
-                osc4.frequency.value = freq + 0.5;
-
-                [osc1, osc2, osc3, osc4].forEach(osc => {
-                    osc.connect(droneGain);
-                    osc.start();
-                    droneOscillators.push(osc);
-                });
-
-                isDronePlaying = true;
-                return true;
-            }
-        }
-
-
-        function playBeadClick() {
-            if (isMuted) return;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-
-            const t = audioCtx.currentTime;
-            
-            // Wood Block / Click Sound
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            
-            // Filtered Triangle for "Woody" tone
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(800, t);
-            osc.frequency.exponentialRampToValueAtTime(100, t + 0.05);
-            
-            gain.gain.setValueAtTime(0.3, t);
-            gain.gain.exponentialRampToValueAtTime(0.01, t + 0.05);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            osc.start(t);
-            osc.stop(t + 0.1);
-        }
-
-        function playRoundBell() {
-            if (isMuted) return;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            const t = audioCtx.currentTime;
-            
-            // Bell Sound (Sine with long decay)
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, t); // C5
-            
-            // Bell Envelope
-            gain.gain.setValueAtTime(0, t);
-            gain.gain.linearRampToValueAtTime(0.4, t + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 2.5);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            osc.start(t);
-            osc.stop(t + 3);
-        }
-
-        // --- APP STATE ---
+        // State
         let count = 0;
         let rounds = 0;
-        let dailyGoal = 16;
-        let totalChants = parseInt(localStorage.getItem('vv_total_chants')) || 0;
-        let darshanMode = false;
-        
-        // Timer State
-        let sessionSeconds = 0;
-        setInterval(() => {
-            sessionSeconds++;
-            const mins = Math.floor(sessionSeconds / 60).toString().padStart(2, '0');
-            const secs = (sessionSeconds % 60).toString().padStart(2, '0');
-            document.getElementById('timer-display').innerText = `${mins}:${secs}`;
-        }, 1000);
+        let totalChants = 0;
+        const BEADS_PER_ROUND = 108;
+        let isPlaying = false;
 
-        // --- DOM ELEMENTS ---
-        const countDisplay = document.getElementById('count-display');
-        const roundDisplay = document.getElementById('round-display');
-        const totalDisplay = document.getElementById('total-display');
-        const chantBtn = document.getElementById('chant-btn');
-        const progressRing = document.getElementById('progress-ring');
-        const dailyProgress = document.getElementById('daily-progress');
-        const goalText = document.getElementById('goal-text');
-        const flashOverlay = document.getElementById('flash-overlay');
-        const deityContainer = document.getElementById('deity-container');
-
-        // --- PROGRESS RING SETUP ---
-        const radius = progressRing.r.baseVal.value;
-        const circumference = radius * 2 * Math.PI;
-        progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
-        progressRing.style.strokeDashoffset = circumference;
-
-        const avgDisplay = document.getElementById('avg-time');
-        const settingsPanel = document.getElementById('settings-panel');
-        const hapticCheck = document.getElementById('haptic-toggle');
-        const soundCheck = document.getElementById('settings-sound-toggle');
-        
-        let lastChantTime = 0;
-        let chantTimes = [];
-        let hapticsEnabled = true;
-
-        // --- THEME ENGINE ---
-        function setTheme(theme) {
-            document.body.setAttribute('data-theme', theme);
-            document.querySelectorAll('.theme-btn').forEach(btn => {
-                if(btn.dataset.val === theme) {
-                    btn.classList.add('border-yellow-500/40', 'bg-slate-700');
-                    btn.classList.remove('border-white/5');
-                } else {
-                    btn.classList.remove('border-yellow-500/40', 'bg-slate-700');
-                    btn.classList.add('border-white/5');
-                }
-            });
-            // Update 3D Colors
-            updateParticlesTheme(theme);
-        }
-        
-        document.querySelectorAll('.theme-btn').forEach(btn => {
-            btn.addEventListener('click', () => setTheme(btn.dataset.val));
-        });
-
-
-        // --- CAROUSEL LOGIC ---
-        const carouselTrack = document.getElementById('carousel-track');
-        // Images provided by user + generated
-        const carouselImages = [
-            'assets/radha-madhav.jpeg',
-            'assets/radha_krishna.png',
-            'assets/Krishna.jpeg',
-            'assets/Bihari.jpeg',
-            'assets/radhaRaman.jpeg',
-            'assets/radha-madhav2.jpeg',
-            'assets/MahaPrabhu.jpeg',
+        // Assets for gallery and background
+        const images = [
             'assets/RadhaVallabh.jpeg',
+            'assets/Krishna.jpeg',
+            'assets/MahaPrabhu.jpeg', 
+            'assets/radha-madhav.jpeg',
+            'assets/radhaRaman.jpeg',
+            'assets/radha_krishna.png',
             'assets/guru.png'
         ];
-        
-        let activeSlide = 0;
-        
-        function initCarousel() {
-            if(!carouselTrack) return;
-            
-            carouselImages.forEach((src, index) => {
-                const div = document.createElement('div');
-                div.className = 'min-w-full h-full relative';
-                div.innerHTML = `
-                    <img src="${src}" class="w-full h-full object-cover" alt="Divine Form">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/90"></div>
-                `;
-                carouselTrack.appendChild(div);
-            });
 
-            // Auto Rotate
-            setInterval(() => {
-                activeSlide = (activeSlide + 1) % carouselImages.length;
-                carouselTrack.style.transform = `translateX(-${activeSlide * 100}%)`;
-            }, 5000);
-        }
-        initCarousel();
+        // Elements
+        const countEl = document.getElementById('mantra-count');
+        const roundEl = document.getElementById('round-count');
+        const sessionEl = document.getElementById('total-chants-session');
+        const bgImage = document.getElementById('bg-image');
+        const audioBtn = document.getElementById('audio-btn');
+        const bgMusic = document.getElementById('bg-music');
+        const clickSound = document.getElementById('click-sound');
 
-
-        // --- UI UPDATES ---
-        function updateUI() {
-            countDisplay.innerText = count;
-            roundDisplay.innerText = rounds;
-            totalDisplay.innerText = totalChants.toLocaleString();
-            
-            // Bead Ring
-            const offset = (circumference - (count / 108) * circumference).toFixed(2);
-            progressRing.style.strokeDashoffset = offset;
-
-            // Daily Goal
-            const goalPercent = Math.min((rounds / dailyGoal) * 100, 100);
-            dailyProgress.style.width = `${goalPercent}%`;
-            goalText.innerText = `${rounds} / ${dailyGoal} R`;
-            
-            if (rounds >= dailyGoal) {
-                dailyProgress.classList.add('bg-green-500'); 
+        // Init
+        function init() {
+            renderGallery();
+            // Load from local storage if needed
+            const saved = localStorage.getItem('chantData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                count = data.count || 0;
+                rounds = data.rounds || 0;
+                // Don't restore session total strictly, or keep it separate.
+                updateDisplay();
             }
         }
-        updateUI();
 
-        // --- INTERACTION HANDLER ---
-        function handleChant(e) {
-            // Ripple Effect
-            if(e) {
-                const rect = chantBtn.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const circle = document.createElement('span');
-                circle.classList.add('ripple');
-                circle.style.left = `${x}px`;
-                circle.style.top = `${y}px`;
-                chantBtn.appendChild(circle);
-                setTimeout(() => circle.remove(), 600);
-            }
-
-            // Stats Logic
-            const now = Date.now();
-            if (lastChantTime > 0) {
-                const diff = (now - lastChantTime) / 1000;
-                if(diff < 10) { 
-                    chantTimes.push(diff);
-                    if(chantTimes.length > 10) chantTimes.shift(); 
-                    const avg = chantTimes.reduce((a,b)=>a+b) / chantTimes.length;
-                    avgDisplay.innerText = avg.toFixed(1) + 's';
-                }
-            }
-            lastChantTime = now;
-
-            // Haptics
-            if (hapticsEnabled && navigator.vibrate) {
-                navigator.vibrate(10); 
-            }
-
-            // Logic
+        // Logic
+        function incrementCounter() {
             count++;
             totalChants++;
-            localStorage.setItem('vv_total_chants', totalChants);
-            playBeadClick();
-
-            // Visual Punch
-            gsap.fromTo(countDisplay, { scale: 1.3 }, { scale: 1, duration: 0.2, ease: "back.out(2)" });
             
-            // Particle Burst in ThreeJS
-            pulseParticles();
+            // Play subtle click sound (optional, very short)
+            // clickSound.currentTime = 0;
+            // clickSound.play().catch(e => {});
 
-            // Round Completion
-            if (count >= 108) {
+            // Animations
+            triggerRipple();
+            
+            if (count >= BEADS_PER_ROUND) {
                 completeRound();
             }
 
-            updateUI();
+            updateDisplay();
+            saveData();
+            
+            // Change background occasionally? Or just let user select.
         }
 
         function completeRound() {
-            rounds++;
             count = 0;
+            rounds++;
+            // Could play a bell or vibration here
+            const notification = new Audio('assets/hairbol.ogg'); // Using hairbol as round complete or similar
+            notification.play().catch(e=>{});
             
-            // Play Haribol Audio
-            const haribol = document.getElementById('haribol-audio');
-            if(haribol) {
-                haribol.currentTime = 0;
-                haribol.play().catch(e => console.log('Audio play failed:', e));
-            } else {
-                playRoundBell(); // Fallback
-            }
-            
-            // Flash Animation
-            gsap.to(flashOverlay, { opacity: 1, duration: 0.1, yoyo: true, repeat: 1 });
-            
-            // Goal Animation
-            gsap.fromTo(goalText, { scale: 1.5, color: '#fff' }, { scale: 1, color: '#fef08a', duration: 1 });
-
-            // Winner Confetti!
-            confetti({
-                particleCount: 150,
-                spread: 100,
-                origin: { y: 0.6 },
-                colors: ['#FFD700', '#FF9933', '#FFFFFF'],
-                disableForReducedMotion: true
-            });
-
-            // Reset Ring Spin
-            gsap.to(progressRing, { rotation: 360, transformOrigin: "center", duration: 0.8, clearProps: "rotation" });
+            // Celebration effect
+            confettiEffect();
         }
 
-        // --- EVENT LISTENERS ---
-        chantBtn.addEventListener('mousedown', handleChant);
-        
-        // Prevent double fire on touch devices
-        chantBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // prevents mouse emulation
-            const touch = e.touches[0];
-            // Mock event structure for ripple calculation
-            handleChant({ clientX: touch.clientX, clientY: touch.clientY });
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if ((e.code === 'Space' || e.code === 'Enter') && !e.repeat) {
-                e.preventDefault();
-                // Center ripple for keyboard
-                const rect = chantBtn.getBoundingClientRect();
-                handleChant({ clientX: rect.left + rect.width/2, clientY: rect.top + rect.height/2 });
-            }
-        });
-
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            if(confirm('Reset current round beads to 0?')) {
+        function resetCounter() {
+            if(confirm('Reset current round?')) {
                 count = 0;
-                updateUI();
-            }
-        });
-
-        document.getElementById('sound-toggle').addEventListener('click', function() {
-            isMuted = !isMuted;
-            const icon = this.querySelector('svg');
-            if(isMuted) {
-                this.innerHTML = '<i data-lucide="volume-x" class="w-5 h-5"></i>';
-                this.classList.add('opacity-50');
-            } else {
-                this.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i>';
-                this.classList.remove('opacity-50');
-            }
-            lucide.createIcons();
-        });
-
-        // Drone Toggle
-        document.getElementById('drone-toggle').addEventListener('click', function() {
-            const active = toggleDrone();
-            if(active) {
-                this.classList.add('bg-yellow-500', 'text-black');
-                this.classList.remove('bg-slate-800/50', 'text-yellow-300');
-            } else {
-                this.classList.remove('bg-yellow-500', 'text-black');
-                this.classList.add('bg-slate-800/50', 'text-yellow-300');
-            }
-        });
-
-        
-        // Settings Toggles
-        function toggleSwitch(btn, state) {
-            const dot = btn.querySelector('div');
-            const bg = btn;
-            if(state) {
-                dot.style.transform = 'translateX(1rem)';
-                bg.classList.add('bg-green-500/20');
-                bg.classList.remove('bg-slate-700');
-                dot.classList.add('bg-green-500');
-                dot.classList.remove('bg-slate-400');
-            } else {
-                dot.style.transform = 'translateX(0)';
-                bg.classList.remove('bg-green-500/20');
-                bg.classList.add('bg-slate-700');
-                 dot.classList.remove('bg-green-500');
-                dot.classList.add('bg-slate-400');
+                updateDisplay();
+                saveData();
             }
         }
 
-        soundCheck.addEventListener('click', () => {
-            isMuted = !isMuted;
-            toggleSwitch(soundCheck, !isMuted);
-        });
-
-        hapticCheck.addEventListener('click', () => {
-             hapticsEnabled = !hapticsEnabled;
-             toggleSwitch(hapticCheck, hapticsEnabled);
-        });
-
-        // Settings Panel Logic
-        const settingsToggle = document.getElementById('settings-toggle');
-        const closeSettings = document.getElementById('close-settings');
-        
-        settingsToggle.addEventListener('click', () => {
-            settingsPanel.classList.remove('translate-x-full');
-        });
-        closeSettings.addEventListener('click', () => {
-            settingsPanel.classList.add('translate-x-full');
-        });
-
-        document.getElementById('reset-total-btn').addEventListener('click', () => {
-            if(confirm('Are you sure you want to reset your LIFETIME stats? This cannot be undone.')) {
-                totalChants = 0;
-                localStorage.setItem('vv_total_chants', 0);
-                updateUI();
-            }
-        });
-
-        // Info Modal
-        const modal = document.getElementById('info-modal');
-        const content = document.getElementById('info-content');
-        
-        function openModal() {
-            modal.classList.remove('pointer-events-none');
-             modal.classList.remove('opacity-0');
-             content.classList.remove('scale-95');
-             content.classList.add('scale-100');
-        }
-        function closeModal() {
-            modal.classList.add('pointer-events-none');
-            modal.classList.add('opacity-0');
-            content.classList.remove('scale-100');
-            content.classList.add('scale-95');
+        function updateDisplay() {
+            countEl.innerText = count;
+            roundEl.innerText = `Round ${rounds + 1}`;
+            sessionEl.innerText = totalChants;
         }
 
-        document.getElementById('info-toggle').addEventListener('click', openModal);
-        document.getElementById('close-info').addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if(e.target === modal) closeModal();
-        });
+        function saveData() {
+            localStorage.setItem('chantData', JSON.stringify({ count, rounds }));
+        }
 
-        // Darshan Toggle Logic
-        document.getElementById('darshan-toggle').addEventListener('click', function() {
-            darshanMode = !darshanMode;
-            const left = document.getElementById('deity-left');
-            const right = document.getElementById('deity-right');
-            const container = document.getElementById('deity-container');
-
-            if (darshanMode) {
-                // Focus Mode: Move images into view, maybe dim UI?
-                this.classList.add('bg-yellow-500', 'text-black');
-                this.classList.remove('bg-slate-800/50', 'text-yellow-300');
-                
-                // Reposition deities to flank the center on Desktop
-                container.classList.remove('pointer-events-none', 'opacity-30');
-                container.classList.add('opacity-100', 'z-0');
-                
-                // CSS classes handle the translation removal (see style logic or inline classes)
-                // Actually, let's force the transform via class manipulation
-                left.classList.remove('-translate-x-full');
-                left.classList.remove('xl:translate-x-0'); // Remove default desktop behavior
-                left.classList.add('translate-x-0', 'scale-110');
-                
-                right.classList.remove('translate-x-full');
-                right.classList.remove('xl:translate-x-0');
-                right.classList.add('translate-x-0', 'scale-110');
-
+        // Audio Toggle
+        function toggleAudio() {
+            if (isPlaying) {
+                bgMusic.pause();
+                audioBtn.innerHTML = '<i class="fas fa-music text-xl text-saffron group-hover:text-white transition-colors"></i>';
+                audioBtn.classList.remove('animate-pulse');
             } else {
-                // Return to BG mode
-                this.classList.remove('bg-yellow-500', 'text-black');
-                this.classList.add('bg-slate-800/50', 'text-yellow-300');
-                
-                container.classList.add('pointer-events-none', 'opacity-30');
-                container.classList.remove('opacity-100', 'z-0');
-                
-                left.classList.add('-translate-x-full', 'xl:translate-x-0');
-                left.classList.remove('translate-x-0', 'scale-110');
-                
-                right.classList.add('translate-x-full', 'xl:translate-x-0');
-                right.classList.remove('translate-x-0', 'scale-110');
+                bgMusic.play().catch(e => alert("Please interact with the page first"));
+                audioBtn.innerHTML = '<i class="fas fa-pause text-xl text-saffron group-hover:text-white transition-colors"></i>';
+                audioBtn.classList.add('animate-pulse');
             }
-        });
+            isPlaying = !isPlaying;
+        }
 
+        // Gallery
+        function renderGallery() {
+            const container = document.getElementById('image-gallery');
+            images.forEach(img => {
+                const el = document.createElement('div');
+                el.className = 'flex-shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden cursor-pointer border-2 border-transparent hover:border-saffron transition-all relative group';
+                el.innerHTML = `<img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">`;
+                el.onclick = () => setBackground(img);
+                container.appendChild(el);
+            });
+        }
 
-        // --- THREE.JS VORTEX BACKGROUND ---
-        let pulseParticles; 
-        let updateParticlesTheme; 
+        function setBackground(src) {
+            // Fade out current
+            bgImage.style.opacity = '0';
+            setTimeout(() => {
+                bgImage.src = src;
+                bgImage.onload = () => {
+                    bgImage.style.opacity = '0.6';
+                };
+            }, 300);
+        }
 
-        function initThreeJS() {
-            const container = document.getElementById('canvas-container');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        function triggerRipple() {
+            // Visual feedback on tap
+            const bead = document.querySelector('.glass');
+            bead.animate([
+                { transform: 'scale(0.95)', borderColor: 'rgba(255, 153, 51, 0.8)' },
+                { transform: 'scale(1)', borderColor: 'rgba(255, 255, 255, 0.1)' }
+            ], {
+                duration: 150,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+            });
+        }
+
+        function confettiEffect() {
+            // Simple visual celebration using basic particles
+            // (Simplified for vanilla JS without external libraries)
+            const colors = ['#FFD700', '#FF9933', '#FFFFFF'];
+            for(let i=0; i<30; i++) {
+                createParticle(colors[Math.floor(Math.random() * colors.length)]);
+            }
+        }
+
+        function createParticle(color) {
+            const p = document.createElement('div');
+            p.style.position = 'fixed';
+            p.style.left = '50%';
+            p.style.top = '50%';
+            p.style.width = '10px';
+            p.style.height = '10px';
+            p.style.backgroundColor = color;
+            p.style.borderRadius = '50%';
+            p.style.pointerEvents = 'none';
+            p.style.zIndex = '100';
             
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            container.appendChild(renderer.domElement);
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 5 + Math.random() * 5;
+            const tx = Math.cos(angle) * 100 * (Math.random() + 0.5);
+            const ty = Math.sin(angle) * 100 * (Math.random() + 0.5);
 
-            // 1. Vortex Particles
-            const particlesGeometry = new THREE.BufferGeometry();
-            const count = 1500;
-            const positions = new Float32Array(count * 3);
-            const colors = new Float32Array(count * 3);
-            const baseColors = new Float32Array(count * 3); // Store base for easy reset
-            const sizes = new Float32Array(count);
+            document.body.appendChild(p);
 
-            const colorCenter = new THREE.Color(0xFFD700);
-            const colorMiddle = new THREE.Color(0xFF9933);
-            const colorEdge = new THREE.Color(0x4aa8ff);
-
-            for(let i = 0; i < count; i++) {
-                const i3 = i * 3;
-                const angle = Math.random() * Math.PI * 2;
-                const radius = 5 + Math.random() * 25; 
-                const x = Math.cos(angle) * radius;
-                const y = Math.sin(angle) * radius;
-                const z = (Math.random() - 0.5) * 20;
-
-                positions[i3] = x;
-                positions[i3+1] = y;
-                positions[i3+2] = z;
-
-                // Color Logic
-                const c = new THREE.Color();
-                if (radius < 10) c.copy(colorCenter); 
-                else if (radius < 20) c.copy(colorMiddle); 
-                else c.copy(colorEdge); 
-
-                colors[i3] = c.r; colors[i3+1] = c.g; colors[i3+2] = c.b;
-                baseColors[i3] = c.r; baseColors[i3+1] = c.g; baseColors[i3+2] = c.b;
-                
-                sizes[i] = Math.random();
-            }
-
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-            particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-            const particleMaterial = new THREE.PointsMaterial({
-                size: 0.3,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending,
-                sizeAttenuation: true
-            });
-
-            const particleSystem = new THREE.Points(particlesGeometry, particleMaterial);
-            scene.add(particleSystem);
-
-            // 2. Central Glow
-            const glowGeo = new THREE.SphereGeometry(2, 32, 32);
-            const glowMat = new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.1, wireframe: true });
-            const glowSphere = new THREE.Mesh(glowGeo, glowMat);
-            scene.add(glowSphere);
-
-            camera.position.z = 25;
-
-            // Interaction Pulse
-            let pulseTime = 0;
-            pulseParticles = () => {
-                pulseTime = 1;
-                glowSphere.scale.set(1.5, 1.5, 1.5);
-            };
-
-            // Theme Updater
-            updateParticlesTheme = (theme) => {
-                let c1, c2, c3;
-                if(theme === 'forest') {
-                    c1 = new THREE.Color(0x86efac); // light green
-                    c2 = new THREE.Color(0x22c55e); // green
-                    c3 = new THREE.Color(0x14532d); // dark green
-                } else if (theme === 'ocean') {
-                    c1 = new THREE.Color(0x7dd3fc); // light blue
-                    c2 = new THREE.Color(0x38bdf8); // blue
-                    c3 = new THREE.Color(0x0c4a6e); // dark blue
-                } else {
-                    // Divine
-                    c1 = new THREE.Color(0xFFD700);
-                    c2 = new THREE.Color(0xFF9933);
-                    c3 = new THREE.Color(0x4aa8ff);
-                }
-
-                glowMat.color = c1;
-
-                const attrs = particleSystem.geometry.attributes.color.array;
-                const pos = particleSystem.geometry.attributes.position.array;
-                
-                for(let i=0; i<count; i++) {
-                    const i3 = i*3;
-                    const r = Math.hypot(pos[i3], pos[i3+1]);
-                    
-                    const c = new THREE.Color();
-                    if (r < 10) c.copy(c1); 
-                    else if (r < 20) c.copy(c2); 
-                    else c.copy(c3); 
-
-                    attrs[i3] = c.r;
-                    attrs[i3+1] = c.g;
-                    attrs[i3+2] = c.b;
-                }
-                particleSystem.geometry.attributes.color.needsUpdate = true;
-            };
-
-            const clock = new THREE.Clock();
-
-            function animate() {
-                const dt = clock.getDelta();
-                const time = clock.getElapsedTime();
-
-                // Rotate System
-                particleSystem.rotation.z = time * 0.05;
-                glowSphere.rotation.y = time * 0.2;
-                glowSphere.rotation.x = time * 0.1;
-
-                // Pulse Decay
-                if (pulseTime > 0) {
-                    pulseTime -= dt * 2;
-                    particleSystem.scale.setScalar(1 + pulseTime * 0.1);
-                    glowSphere.scale.lerp(new THREE.Vector3(1,1,1), 0.1);
-                }
-
-                // Wave motion
-                const positions = particleSystem.geometry.attributes.position.array;
-                for(let i=0; i < count; i++) {
-                    const i3 = i * 3;
-                    positions[i3+2] += Math.sin(time + positions[i3]) * 0.02; 
-                }
-                particleSystem.geometry.attributes.position.needsUpdate = true;
-
-                renderer.render(scene, camera);
-                requestAnimationFrame(animate);
-            }
-            animate();
-
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
+            p.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 800 + Math.random() * 400,
+                easing: 'ease-out'
+            }).onfinish = () => p.remove();
         }
-        
-        initThreeJS();
+
+        // Init App
+        init();
 
     </script>
 </body>
