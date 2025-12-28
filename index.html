@@ -12,6 +12,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
@@ -145,6 +148,12 @@
              <button id="darshan-toggle" class="p-2 rounded-full bg-slate-800/50 hover:bg-yellow-600/30 text-yellow-300 transition-all border border-yellow-500/30" title="Darshan Mode (Focus)">
                 <i data-lucide="eye" class="w-5 h-5"></i>
             </button>
+            <button id="drone-toggle" class="p-2 rounded-full bg-slate-800/50 hover:bg-yellow-600/30 text-yellow-300 transition-all border border-yellow-500/30" title="Play Drone Sound">
+                <i data-lucide="music" class="w-5 h-5"></i>
+            </button>
+            <button id="info-toggle" class="p-2 rounded-full bg-slate-800/50 hover:bg-yellow-600/30 text-yellow-300 transition-all border border-yellow-500/30" title="Mantra Meaning">
+                <i data-lucide="info" class="w-5 h-5"></i>
+            </button>
             <button id="sound-toggle" class="p-2 rounded-full bg-slate-800/50 hover:bg-yellow-600/30 text-yellow-300 transition-all border border-yellow-500/30">
                 <i data-lucide="volume-2" class="w-5 h-5" id="sound-icon"></i>
             </button>
@@ -164,14 +173,14 @@
             <!-- Left Deity -->
             <div class="deity-frame transform transition-all duration-700 -translate-x-full xl:translate-x-0" id="deity-left">
                 <div class="frame-ornament rounded-lg overflow-hidden shadow-2xl w-48 xl:w-64">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/A.C._Bhaktivedanta_Swami_Prabhupada_1974.jpg/480px-A.C._Bhaktivedanta_Swami_Prabhupada_1974.jpg" class="w-full h-auto object-cover opacity-90">
+                    <img src="assets/guru.png" class="w-full h-auto object-cover opacity-90 transition-opacity duration-700 hover:opacity-100">
                     <div class="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent text-center py-2 text-yellow-100 text-xs font-serif tracking-widest">SRILA PRABHUPADA</div>
                 </div>
             </div>
             <!-- Right Deity -->
              <div class="deity-frame transform transition-all duration-700 translate-x-full xl:translate-x-0" id="deity-right">
                 <div class="frame-ornament rounded-lg overflow-hidden shadow-2xl w-48 xl:w-64">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Krishna_and_Radha_in_a_Pavilion_-_Google_Art_Project.jpg/600px-Krishna_and_Radha_in_a_Pavilion_-_Google_Art_Project.jpg" class="w-full h-auto object-cover opacity-90">
+                    <img src="assets/radha_krishna.png" class="w-full h-auto object-cover opacity-90 transition-opacity duration-700 hover:opacity-100">
                     <div class="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent text-center py-2 text-yellow-100 text-xs font-serif tracking-widest">SRI SRI RADHA KRISHNA</div>
                 </div>
             </div>
@@ -226,7 +235,7 @@
                 
                 <!-- Count Button -->
                 <button id="chant-btn" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-48 h-48 rounded-full bg-gradient-to-b from-slate-800 to-slate-900 shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-yellow-500/20 cursor-pointer hover:border-yellow-500/50 active:scale-95 transition-all duration-100 z-20 overflow-hidden outline-none tap-highlight-transparent">
-                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-10 mix-blend-overlay"></div>
+                    <div class="absolute inset-0 bg-[url('assets/bead_texture.png')] bg-cover bg-center opacity-30 mix-blend-overlay"></div>
                     <span class="text-[10px] text-gray-400 mb-1 uppercase tracking-widest">Bead</span>
                     <span id="count-display" class="text-7xl font-bold text-white spiritual-font leading-none drop-shadow-lg">0</span>
                     <span class="text-xs text-gray-500 mt-2 font-mono">/ 108</span>
@@ -259,6 +268,29 @@
         </div>
     </main>
 
+    <!-- Info Modal -->
+    <div id="info-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-slate-900 border border-yellow-500/30 p-8 rounded-2xl max-w-lg w-full mx-4 shadow-2xl relative transform scale-95 transition-transform duration-300" id="info-content">
+            <button id="close-info" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <h2 class="text-2xl font-bold spiritual-font text-yellow-400 mb-4">The Maha Mantra</h2>
+            <div class="space-y-4 text-slate-300 leading-relaxed text-sm md:text-base">
+                <p>
+                    <span class="text-yellow-200 font-semibold">"Hare"</span> refers to the divine energy of the Lord.<br>
+                    <span class="text-yellow-200 font-semibold">"Krishna"</span> means the All-Attractive One.<br>
+                    <span class="text-yellow-200 font-semibold">"Rama"</span> means the Repository of All Pleasure.
+                </p>
+                <p>
+                    Chanting this mantra is a call to the Lord and His energy to engage one in His service. It is described in the Vedas as the most effective method for spiritual realization in the current age.
+                </p>
+                <div class="bg-yellow-500/10 p-4 rounded-lg border-l-4 border-yellow-500 italic text-yellow-100">
+                    "There is no other way, there is no other way, there is no other way..." - Brhan-naradiya Purana
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="w-full py-4 text-center text-slate-500 text-xs relative z-10 pointer-events-none">
         <p>Chant & Be Happy • <span class="text-yellow-600">Vaishnava Vibes</span></p>
     </footer>
@@ -267,9 +299,71 @@
         // --- LUCIDE ICONS ---
         lucide.createIcons();
 
-        // --- AUDIO ENGINE (Procedural - No files needed) ---
+
+        // --- AUDIO ENGINE (Procedural) ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let isMuted = false;
+        let isDronePlaying = false;
+        let droneOscillators = [];
+        let droneGain = null;
+
+        // Drone Functionality
+        function toggleDrone() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            if (isDronePlaying) {
+                // Stop Drone
+                const t = audioCtx.currentTime;
+                droneGain.gain.exponentialRampToValueAtTime(0.001, t + 1);
+                droneOscillators.forEach(osc => osc.stop(t + 1));
+                droneOscillators = [];
+                isDronePlaying = false;
+                return false;
+            } else {
+                // Start Drone (Tanpura-ish simulation)
+                droneGain = audioCtx.createGain();
+                droneGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+                droneGain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 2); // Fade in
+                
+                // Lowpass filter for warmth
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = "lowpass";
+                filter.frequency.value = 400;
+
+                droneGain.connect(filter);
+                filter.connect(audioCtx.destination);
+
+                // Root (C#3 approx)
+                const freq = 138.59; 
+                
+                const osc1 = audioCtx.createOscillator();
+                osc1.type = 'sawtooth';
+                osc1.frequency.value = freq;
+                
+                const osc2 = audioCtx.createOscillator();
+                osc2.type = 'sine';
+                osc2.frequency.value = freq * 1.5; // Fifth
+
+                const osc3 = audioCtx.createOscillator(); // Octave
+                osc3.type = 'sine';
+                osc3.frequency.value = freq * 2;
+
+                // Subtle detune for chorus effect
+                const osc4 = audioCtx.createOscillator();
+                osc4.type = 'sawtooth';
+                osc4.frequency.value = freq + 0.5;
+
+                [osc1, osc2, osc3, osc4].forEach(osc => {
+                    osc.connect(droneGain);
+                    osc.start();
+                    droneOscillators.push(osc);
+                });
+
+                isDronePlaying = true;
+                return true;
+            }
+        }
+
 
         function playBeadClick() {
             if (isMuted) return;
@@ -422,6 +516,15 @@
             // Goal Animation
             gsap.fromTo(goalText, { scale: 1.5, color: '#fff' }, { scale: 1, color: '#fef08a', duration: 1 });
 
+            // Winner Confetti!
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#FFD700', '#FF9933', '#FFFFFF'],
+                disableForReducedMotion: true
+            });
+
             // Reset Ring Spin
             gsap.to(progressRing, { rotation: 360, transformOrigin: "center", duration: 0.8, clearProps: "rotation" });
         }
@@ -464,6 +567,41 @@
                 this.classList.remove('opacity-50');
             }
             lucide.createIcons();
+        });
+
+        // Drone Toggle
+        document.getElementById('drone-toggle').addEventListener('click', function() {
+            const active = toggleDrone();
+            if(active) {
+                this.classList.add('bg-yellow-500', 'text-black');
+                this.classList.remove('bg-slate-800/50', 'text-yellow-300');
+            } else {
+                this.classList.remove('bg-yellow-500', 'text-black');
+                this.classList.add('bg-slate-800/50', 'text-yellow-300');
+            }
+        });
+
+        // Info Modal
+        const modal = document.getElementById('info-modal');
+        const content = document.getElementById('info-content');
+        
+        function openModal() {
+            modal.classList.remove('pointer-events-none');
+             modal.classList.remove('opacity-0');
+             content.classList.remove('scale-95');
+             content.classList.add('scale-100');
+        }
+        function closeModal() {
+            modal.classList.add('pointer-events-none');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+        }
+
+        document.getElementById('info-toggle').addEventListener('click', openModal);
+        document.getElementById('close-info').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) closeModal();
         });
 
         // Darshan Toggle Logic
