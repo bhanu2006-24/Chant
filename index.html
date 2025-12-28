@@ -65,8 +65,8 @@
     
     <!-- Background Slideshow/Image -->
     <div class="fixed inset-0 z-0 transition-opacity duration-1000 ease-in-out" id="bg-container">
-        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent z-10"></div>
-        <img src="assets/RadhaVallabh.jpeg" id="bg-image" class="w-full h-full object-cover object-center scale-110 motion-safe:animate-pulse-slow opacity-60" alt="Divine Background">
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent z-10"></div>
+        <img src="assets/imgs/RadhaVallabh.jpeg" id="bg-image" class="w-full h-full object-cover object-center scale-105 transition-all duration-700 ease-in-out" alt="Divine Background">
     </div>
 
     <!-- Main Content -->
@@ -87,42 +87,48 @@
         </header>
 
         <!-- Main Chanting Interface -->
-        <main class="flex flex-col items-center justify-center flex-grow py-12">
+        <main class="flex-grow relative z-10 flex flex-col justify-end pb-8" id="click-area">
             
-            <div class="relative group cursor-pointer mb-12" onclick="incrementCounter()">
-                <!-- Decorative Ring -->
-                <div class="absolute -inset-8 bg-gradient-to-r from-saffron to-purple-600 rounded-full opacity-20 group-hover:opacity-40 blur-xl transition-all duration-500 animate-spin-slow"></div>
-                
-                <!-- Main Bead -->
-                <div class="relative w-64 h-64 md:w-80 md:h-80 glass rounded-full flex flex-col items-center justify-center border-2 border-white/10 shadow-2xl bead-glow transition-transform active:scale-95 duration-200">
-                    <img src="assets/bead_texture.png" class="absolute inset-0 w-full h-full object-cover rounded-full opacity-30 mix-blend-overlay" alt="Texture">
-                    
-                    <span class="text-xs uppercase tracking-[0.3em] text-gray-400 mb-2">Chant & Tap</span>
-                    <h2 id="mantra-count" class="text-8xl font-serif font-bold text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">0</h2>
-                    <div class="mt-4 flex items-center gap-2 text-saffron/80">
-                        <i class="fas fa-ring"></i>
-                        <span id="round-count" class="text-sm font-medium">Round 1</span>
+            <!-- Mantra Text (Smaller and at top) -->
+            <!-- Top spacer to push content down -->
+            <div class="flex-grow"></div>
+
+            <!-- Mantra Text (Moved to Bottom) -->
+            <div class="text-center mb-6 pointer-events-none fade-in">
+                <div class="glass px-6 py-3 rounded-full inline-block backdrop-blur-md bg-black/30 border-white/10">
+                    <p class="text-sm md:text-lg font-serif text-yellow-100 tracking-wide drop-shadow-md">
+                        <span class="mr-1">Hare Krishna Hare Krishna</span>
+                        <span class="mr-1">Krishna Krishna Hare Hare</span>
+                        <br class="block md:hidden">
+                        <span class="text-saffron mr-1">Hare Rama Hare Rama</span>
+                        <span class="text-saffron">Rama Rama Hare Hare</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Counter Display (Bottom) -->
+            <div class="text-center mb-12 pointer-events-none select-none relative z-20">
+                <div class="inline-flex flex-col items-center justify-center">
+                    <span class="text-xs uppercase tracking-[0.3em] text-gray-300 mb-2 text-glow opacity-80">Mantra Count</span>
+                    <div class="flex items-baseline gap-4">
+                        <h2 id="mantra-count" class="text-8xl md:text-9xl font-serif font-bold text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] text-glow transition-all duration-100 scale-100">0</h2>
+                        <span class="text-2xl text-gray-400 font-serif">/ 108</span>
+                    </div>
+                    <div class="mt-2 flex items-center gap-2 px-4 py-1 rounded-full glass border border-white/10 bg-black/20 text-saffron">
+                        <i class="fas fa-ring text-xs"></i>
+                        <span id="round-count" class="text-sm font-medium tracking-wider">Round 1</span>
                     </div>
                 </div>
-
-                <!-- Ripple Effect Container -->
-                <div id="ripple-container" class="absolute inset-0 pointer-events-none overflow-hidden rounded-full"></div>
             </div>
 
-            <!-- Mantra Text -->
-            <div class="text-center space-y-4 max-w-2xl mx-auto glass p-8 rounded-2xl animate-float">
-                <p class="text-xl md:text-3xl font-serif leading-relaxed text-yellow-100">
-                    <span class="block">Hare Krishna Hare Krishna</span>
-                    <span class="block">Krishna Krishna Hare Hare</span>
-                    <span class="block text-saffron mt-2">Hare Rama Hare Rama</span>
-                    <span class="block text-saffron">Rama Rama Hare Hare</span>
-                </p>
-            </div>
+            <!-- Click area covers everything but header/footer controls -->
+            <div class="absolute inset-0 z-0" onclick="incrementCounter(event)"></div>
 
         </main>
 
         <!-- Gallery / Footer -->
-        <footer class="mt-auto">
+        <footer class="mt-auto hidden">
+            <!-- Hidden Gallery to maximize space -->
             <div class="flex overflow-x-auto gap-4 pb-4 px-2 snap-x hide-scroll" id="image-gallery">
                 <!-- Javascript will populate this -->
             </div>
@@ -154,15 +160,8 @@
         let isPlaying = false;
 
         // Assets for gallery and background
-        const images = [
-            'assets/RadhaVallabh.jpeg',
-            'assets/Krishna.jpeg',
-            'assets/MahaPrabhu.jpeg', 
-            'assets/radha-madhav.jpeg',
-            'assets/radhaRaman.jpeg',
-            'assets/radha_krishna.png',
-            'assets/guru.png'
-        ];
+        let images = [];
+        let currentImgIdx = 0;
 
         // Elements
         const countEl = document.getElementById('mantra-count');
@@ -174,30 +173,78 @@
         const clickSound = document.getElementById('click-sound');
 
         // Init
-        function init() {
-            renderGallery();
+        // Init
+        async function init() {
+            try {
+                // Attempt to fetch the directory listing of the 'imgs' folder
+                const response = await fetch('imgs/');
+                if (response.ok) {
+                    const text = await response.text();
+                    // Parse the HTML directory listing to find image links
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+                    const links = Array.from(doc.querySelectorAll('a'));
+                    
+                    // Filter for image files and construct paths
+                    const foundImages = links
+                        .map(link => link.getAttribute('href'))
+                        .filter(href => href && /\.(jpeg|jpg|png|gif|webp)$/i.test(href))
+                        .map(filename => {
+                            // Handle cases where href is full path or relative
+                            const cleanName = filename.split('/').pop();
+                            return `imgs/${cleanName}`;
+                        });
+
+                    if (foundImages.length > 0) {
+                        images = foundImages;
+                        console.log('Loaded images dynamically:', images);
+                    }
+                }
+            } catch (error) {
+                console.warn('Could not auto-scan imgs folder (likely due to no server listing). Using fallback.', error);
+            }
+
+            // Fallback if no images found (e.g. if server doesn't support indexing or file:// protocol)
+            if (images.length === 0) {
+                 // Hardcoded fallback ONLY used if auto-scan fails. 
+                 // This ensures the site works somewhat even if broken.
+                 images = [
+                    'imgs/RadhaVallabh.jpeg',
+                    'imgs/Krishna.jpeg',
+                    'imgs/MahaPrabhu.jpeg', 
+                    'imgs/radha-madhav.jpeg',
+                ];
+            }
+
+            // Set initial background if available
+            if (images.length > 0) {
+               renderGallery(); // Populate (hidden) gallery for preload
+               setBackground(images[0]);
+            }
+
             // Load from local storage if needed
             const saved = localStorage.getItem('chantData');
             if (saved) {
                 const data = JSON.parse(saved);
                 count = data.count || 0;
                 rounds = data.rounds || 0;
-                // Don't restore session total strictly, or keep it separate.
                 updateDisplay();
             }
         }
 
         // Logic
-        function incrementCounter() {
+        function incrementCounter(e) {
             count++;
             totalChants++;
             
-            // Play subtle click sound (optional, very short)
-            // clickSound.currentTime = 0;
-            // clickSound.play().catch(e => {});
+            // Change Background on every tap
+            if (images.length > 0) {
+                currentImgIdx = (currentImgIdx + 1) % images.length;
+                setBackground(images[currentImgIdx]);
+            }
 
             // Animations
-            triggerRipple();
+            triggerRipple(e);
             
             if (count >= BEADS_PER_ROUND) {
                 completeRound();
@@ -205,18 +252,14 @@
 
             updateDisplay();
             saveData();
-            
-            // Change background occasionally? Or just let user select.
         }
 
         function completeRound() {
             count = 0;
             rounds++;
-            // Could play a bell or vibration here
-            const notification = new Audio('assets/hairbol.ogg'); // Using hairbol as round complete or similar
+            const notification = new Audio('assets/hairbol.ogg'); 
             notification.play().catch(e=>{});
             
-            // Celebration effect
             confettiEffect();
         }
 
@@ -265,26 +308,49 @@
         }
 
         function setBackground(src) {
-            // Fade out current
-            bgImage.style.opacity = '0';
-            setTimeout(() => {
-                bgImage.src = src;
-                bgImage.onload = () => {
-                    bgImage.style.opacity = '0.6';
-                };
-            }, 300);
+            // Smooth transition
+            // Preload image first to avoid flash
+            const img = new Image();
+            img.src = src;
+            img.onload = () => {
+                 bgImage.style.opacity = '0.4'; // fade out slightly
+                 setTimeout(() => {
+                     bgImage.src = src;
+                     bgImage.onload = () => {
+                         bgImage.style.opacity = '1'; // fade in fully
+                     };
+                 }, 150); // faster transition
+            };
         }
 
-        function triggerRipple() {
-            // Visual feedback on tap
-            const bead = document.querySelector('.glass');
-            bead.animate([
-                { transform: 'scale(0.95)', borderColor: 'rgba(255, 153, 51, 0.8)' },
-                { transform: 'scale(1)', borderColor: 'rgba(255, 255, 255, 0.1)' }
+        function triggerRipple(e) {
+            // Create ripple at click position
+            const ripple = document.createElement('div');
+            ripple.className = 'fixed rounded-full border border-saffron/50 bg-saffron/10 pointer-events-none z-0';
+            
+            // Get coordinates (handle both click and touch if needed, but here mainly click)
+            const x = e ? e.clientX : window.innerWidth / 2;
+            const y = e ? e.clientY : window.innerHeight / 2;
+            
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.style.width = '0px';
+            ripple.style.height = '0px';
+            ripple.style.transform = 'translate(-50%, -50%)';
+
+            document.body.appendChild(ripple);
+
+            ripple.animate([
+                { width: '0px', height: '0px', opacity: 0.8 },
+                { width: '300px', height: '300px', opacity: 0 }
             ], {
-                duration: 150,
-                easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-            });
+                duration: 600,
+                easing: 'ease-out'
+            }).onfinish = () => ripple.remove();
+
+            // Also pulse text
+            countEl.style.transform = 'scale(1.2)';
+            setTimeout(() => countEl.style.transform = 'scale(1)', 100);
         }
 
         function confettiEffect() {
